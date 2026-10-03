@@ -47,9 +47,24 @@ object abajo {
         }
     }
 }
-gi
+
 object alumno {
-    var vida = 3
-    var position = game.at(0,4)
-    var estado = alumnoBien 
+    var property vida = 3
+    var property position = game.at(0,4)
+   // var estado = alumnoBien 
+    method image() = "m-player-normal.png" 
+
+
+method mover(direccion) {
+    direccion.siguiente(position)
+  
+}
+
+
+
+
+
+
+
+
 }
