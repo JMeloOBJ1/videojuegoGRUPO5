@@ -58,10 +58,16 @@ method colision() {
 } 
 
 method perderVida() {
-    self.colision()
-    position = game.at(4,0)
- 
+    if (not self.meMori()) {
+        self.colision()
+        if (self.meMori()) {
+            self.perder()
+        } else {
+            position = game.at(4,0)
+        }
+    }
 }
+
 method perder() {
     if (self.meMori()){
        game.say(self, "me morí") 
