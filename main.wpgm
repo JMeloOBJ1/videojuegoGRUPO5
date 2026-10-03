@@ -7,15 +7,11 @@ program videojuego {
 	game.width(10)
 	game.height(10)
 	game.cellSize(50)
-<<<<<<< HEAD
    
-	game.ground("fondo.png")
 	game.addVisual(autoADerecha)
 	game.addVisual(autoAIzquierda)
-=======
-    game.ground("fondo.jpg")
 	
->>>>>>> 5613098a73318c695bcfd7df52b63705499b6fd4
+
 	game.addVisual(alumno)
 	game.addVisual(unq)
 	game.onCollideDo(alumno, {alumno => alumno.perderVida()})
