@@ -9,12 +9,11 @@ program videojuego {
 	game.cellSize(50)
     game.ground("fondo")
 	
-	game.addVisual(auto1)
+	//game.addVisual(auto1)
 	game.addVisual(alumno)
 
 	
-	game.onCollideDo(pepita, {algo => algo.interactuar(alumno)})
-	keyboard.space().onPressDo({alumno.saludar()})
+	
 	
 	keyboard.left().onPressDo({alumno.mover(izquierda)})
 	keyboard.right().onPressDo({alumno.mover(derecha)})
