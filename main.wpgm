@@ -1,3 +1,2 @@
 import wollok.game.*
-
-import main.* 
+import example.*
