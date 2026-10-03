@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 {
   "name": "granjavilla",
   "version": "1.0.0",
   "resourceFolder": "assets",
   "wollokVersion": "4.0.0"
 }
+=======
+{
+  "name": "main",
+  "version": "1.0.0",
+  "resourceFolder": "assets",
+  "wollokVersion": "4.0.0"
+}
+>>>>>>> 5613098a73318c695bcfd7df52b63705499b6fd4

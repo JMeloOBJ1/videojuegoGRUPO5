@@ -74,17 +74,6 @@ method meMori() {
   
 }
 
-
-
-
-
-
-
-
-
-
-
-
 method mover(direccion) {
     position = direccion.siguiente(position)
   
@@ -94,11 +83,7 @@ method image() = "player.png"
 //method image() = "m-player-normal.png" 
 method text() {
     return "vida: " + vida
-  
 }
-
-
-
 
 }
 
