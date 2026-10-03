@@ -7,14 +7,15 @@ program videojuego {
 	game.width(10)
 	game.height(10)
 	game.cellSize(50)
-    game.ground("fondo")
-	
-	//game.addVisual(auto1)
+   
+	game.ground("fondo.png")
+	game.addVisual(autoADerecha)
+	game.addVisual(autoAIzquierda)
 	game.addVisual(alumno)
-
-	
-	
-	
+	game.addVisual(unq)
+	game.onCollideDo(alumno, {alumno => alumno.perderVida()})
+	autoADerecha.moverDerecha() 
+	autoAIzquierda.moverIzquierda() 
 	keyboard.left().onPressDo({alumno.mover(izquierda)})
 	keyboard.right().onPressDo({alumno.mover(derecha)})
 	keyboard.up().onPressDo({alumno.mover(arriba)})
