@@ -1,5 +1,5 @@
 import wollok.game.*
-import example.*
+import videojuegoGRUPO5.*
 
 
 program videojuego {
