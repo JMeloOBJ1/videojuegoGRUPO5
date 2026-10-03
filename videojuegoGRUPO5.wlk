@@ -50,19 +50,14 @@ object abajo {
 
 object alumno {
     var property vida = 3
-    var property position = game.at(0,4)
-   // var estado = alumnoBien 
+    var property position = game.at(4,0)
     method image() = "m-player-normal.png" 
 
 
 method mover(direccion) {
-    direccion.siguiente(position)
+  position = direccion.siguiente(position)
   
 }
-
-
-
-
 
 
 

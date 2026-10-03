@@ -7,9 +7,8 @@ program videojuego {
 	game.width(10)
 	game.height(10)
 	game.cellSize(50)
-    game.ground("fondo")
+    game.ground("fondo.jpg")
 	
-	//game.addVisual(auto1)
 	game.addVisual(alumno)
 
 	
