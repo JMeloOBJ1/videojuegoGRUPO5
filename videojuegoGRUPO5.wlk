@@ -1,57 +1,8 @@
 import wollok.game.*
 
-
-//direcciones
-object izquierda {
-
-    method siguiente(posicion) {
-        self.validarSiguiente(posicion)
-        return posicion.left(1)
-    }
-    method validarSiguiente(posicion) {
-        if (not self.puedeAvanzar(posicion)) {
-            self.error('No se puede mover a la izquierda')
-        }
-    }
-	
-	method puedeAvanzar(posicion) = posicion.x() > 0
-}
-object derecha {
-    method siguiente(posicion) {
-        self.validarSiguiente(posicion)
-        return posicion.right(1)
-    }
-    method validarSiguiente(posicion) {
-        if (not self.puedeAvanzar(posicion)) {
-            self.error('No se puede mover a la derecha')
-        }
-    }
-	
-	method puedeAvanzar(posicion) = posicion.x() < game.width() - 1
-}
-object arriba {
-    method siguiente(posicion) {
-        self.validarSiguiente(posicion)
-        return posicion.up(1)
-    }
-    method validarSiguiente(posicion) {
-        if(posicion.y() == game.height() - 1 ) {
-            self.error('No se puede mover hacia arriba')
-        }
-    }
-}
-object abajo {
-    method siguiente(posicion) {
-        self.validarSiguiente(posicion)
-        return posicion.down(1)
-    }
-        method validarSiguiente(posicion) {
-        if(posicion.y() == 0 ) {
-            self.error('No se puede mover hacia abajo')
-        }
-    }
-}
-
+// =====================================================================
+//  ALUMNO: PERSONAJE PRINCIPAL
+// =====================================================================
 object alumno {
     var vidaRestante = terceraVida
     var property position = game.at(4,0)
@@ -95,54 +46,9 @@ object alumno {
 	method image() = "estudiante_" + aspecto.nombre() + ".png"
 }
 
-object unq {
-    var property position = game.at(4,9) 
-
-	method image () = "AccesoUNQ.jpg" 
-}
-/*
-object autoADerecha {
-    var property position = game.at(0,2) 
-	
-	method posicionInicial() = game.at(0,2) 
-	
-	method empezarARecorrer() {
-		game.onTick(800, "moverD", {self.autoMueveDerecha()})
-	}
-	method image () = "auto.png" 
-
-	method autoMueveDerecha() {
-		if (position.x() < 10){
-			position = position.right(1)
-		}else{
-			position = self.posicionInicial()
-		}
-	}
-}
-
-object autoAIzquierda {
-    var property position = game.at(9,5) 
-
-	method posicionInicial() = game.at(9,5) 
-
-	method empezarARecorrer() {
-	  game.onTick(300, "moverI", {self.autoMueveIzquierda()})
-	}
-	method image () = "auto.png" 
-
-	method autoMueveIzquierda() {
-		if (position.x() > 0){
-			position = position.left(1)
-		}else{
-			position = self.posicionInicial()
-		}
-	}
-}*/
-
-
-
-//=====Sector de Vida===
-//
+// =====================================================================
+//  VIDAS DEL PERSONAJE PRINCIPAL
+// =====================================================================
 object primeraVida{
 	var property position = game.at(7,0)
 	var aspecto = self
@@ -194,12 +100,11 @@ object sinVida{
 	
 	method cantidadDeVidas() = 0
 }
-//=====Aca finaliza===
-//
 
 
-//=====Sector de alumno===
-//
+// =====================================================================
+//  ESTADOS/ASPECTOS DEL PERSONAJE PRINCIPAL
+// =====================================================================
 object alumnoSano{
 	method nombre() = "3vidas"
 	
@@ -222,6 +127,62 @@ object alumnoFallecido{
 	method siguienteEtapa() = self
 }
 
+// =====================================================================
+//  DIRECCIONES del PERSONAJE PRINCIPAL
+// =====================================================================
+object izquierda {
+
+    method siguiente(posicion) {
+        self.validarSiguiente(posicion)
+        return posicion.left(1)
+    }
+    method validarSiguiente(posicion) {
+        if (not self.puedeAvanzar(posicion)) {
+            self.error('No se puede mover a la izquierda')
+        }
+    }
+	
+	method puedeAvanzar(posicion) = posicion.x() > 0
+}
+object derecha {
+    method siguiente(posicion) {
+        self.validarSiguiente(posicion)
+        return posicion.right(1)
+    }
+    method validarSiguiente(posicion) {
+        if (not self.puedeAvanzar(posicion)) {
+            self.error('No se puede mover a la derecha')
+        }
+    }
+	
+	method puedeAvanzar(posicion) = posicion.x() < game.width() - 1
+}
+object arriba {
+    method siguiente(posicion) {
+        self.validarSiguiente(posicion)
+        return posicion.up(1)
+    }
+    method validarSiguiente(posicion) {
+        if(posicion.y() == game.height() - 1 ) {
+            self.error('No se puede mover hacia arriba')
+        }
+    }
+}
+object abajo {
+    method siguiente(posicion) {
+        self.validarSiguiente(posicion)
+        return posicion.down(1)
+    }
+        method validarSiguiente(posicion) {
+        if(posicion.y() == 0 ) {
+            self.error('No se puede mover hacia abajo')
+        }
+    }
+}
+
+// =====================================================================
+//  VEHICULO: Obstaculo para el PERSONAJE PRINCIPAL
+// =====================================================================
 class Vehiculo {
     const posicionInicial
     const direccion
@@ -243,3 +204,13 @@ class Vehiculo {
         }
     }
 }	
+
+
+// =====================================================================
+//  META: FINAL DEL JUEGO
+// =====================================================================
+object unq {
+    var property position = game.at(4,9) 
+
+	method image () = "AccesoUNQ.jpg" 
+}
