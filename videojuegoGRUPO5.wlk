@@ -214,3 +214,75 @@ object unq {
 
 	method image () = "AccesoUNQ.jpg" 
 }
+
+//class Vehiculo {
+    const fila
+    const intervaloEnMs
+    var carril = null
+    var property tipoVehiculo = auto
+    var property position = null
+
+    method image() = tipoVehiculo.nombre() + ".png"
+
+    method asignarCarril(unCarril) {
+        carril = unCarril
+        position = unCarril.posicionInicial(fila)
+    }
+
+    method empezarARecorrer() {
+        const tick = game.tick(intervaloEnMs, { self.avanzar() }, false)
+        tick.start()
+    }
+
+     method avanzar() {
+        if (carril.direccion().puedeAvanzar(position)) {
+            position = carril.direccion().siguiente(position)
+        } else {
+            position = carril.posicionInicial(fila)
+        }
+    }
+}	
+
+object auto{
+    var property otroVehiculo = camion 
+
+    method nombre() = "auto"
+
+}
+
+object camion {
+  var property otroVehiculo = auto
+
+  method nombre() = "camion"
+}
+
+
+
+
+object generadorDeVehiculos {
+    const carriles = [carrilDerecha, carrilIzquierda]
+    const filasLibres = [1, 2, 3, 4, 5, 6]
+
+    method generar(cantidad) {
+        cantidad.times({ n => self.agregarVehiculoAleatorio() }){
+            self.error("la cantidad de autos es mayor a la de carriles")
+        }
+    }
+
+    method agregarVehiculoAleatorio() {
+        const filaRandomElegida = filasLibres.anyOne()
+        filasLibres.remove(filaRandomElegida)
+
+        const carril = carriles.anyOne()
+        const intervalo = self.pruebaIntervaloRandom()
+        const tiposDeVehiculo = [auto, camion]
+        //intervalosPosibles.anyOne()//
+
+        carril.agregar(new Vehiculo(fila = filaRandomElegida, intervaloEnMs = intervalo, tipoVehiculo = tiposDeVehiculo.anyOne()))
+    }
+
+    method pruebaIntervaloRandom() {
+      return 75.randomUpTo(500)
+    }
+
+}   
