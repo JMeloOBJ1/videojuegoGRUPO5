@@ -4,48 +4,23 @@ import videojuegoGRUPO5.*
 
 program videojuego {
 
-	game.width(10)
-	game.height(10)
+	game.width(12)
+	game.height(12)
 	game.cellSize(65)
-   
-    const autoADerecha1  = new Vehiculo(posicionInicial = game.at(0, 2), direccion = derecha,   intervaloEnMs = 800)
-    const autoADerecha2 = new Vehiculo(posicionInicial = game.at(0, 7), direccion = derecha, intervaloEnMs = 400)
-	const autoADerecha3 = new Vehiculo(posicionInicial = game.at(0, 8), direccion = derecha, intervaloEnMs = 900)
+	game.title("Cruzar la carretera")
+	game.boardGround("fondo_unq.png")
 	
-	const autoAIzquierda1 = new Vehiculo(posicionInicial = game.at(9, 5), direccion = izquierda, intervaloEnMs = 300)
-	const autoAIzquierda2 = new Vehiculo(posicionInicial = game.at(9, 3), direccion = izquierda, intervaloEnMs = 600)
-	const autoAIzquierda3 = new Vehiculo(posicionInicial = game.at(9, 6), direccion = izquierda, intervaloEnMs = 500)
-   
-	game.addVisual(autoADerecha1)
-	game.addVisual(autoADerecha2)
-	game.addVisual(autoADerecha3)
-	
-	game.onCollideDo(autoADerecha1, {alumno => alumno.serAtropellado()})
-	game.onCollideDo(autoADerecha2, {alumno => alumno.serAtropellado()})
-	game.onCollideDo(autoADerecha3, {alumno => alumno.serAtropellado()})
-	
-	game.onCollideDo(autoAIzquierda1, {alumno => alumno.serAtropellado()})
-	game.onCollideDo(autoAIzquierda2, {alumno => alumno.serAtropellado()})
-	game.onCollideDo(autoAIzquierda3, {alumno => alumno.serAtropellado()})
-	
-	autoADerecha1.empezarARecorrer() 
-	autoADerecha2.empezarARecorrer() 
-	autoADerecha3.empezarARecorrer() 
-	
-	autoAIzquierda1.empezarARecorrer() 
-	autoAIzquierda2.empezarARecorrer() 
-	autoAIzquierda3.empezarARecorrer() 
+	game.onCollideDo(alumno, {algo => alumno.interactuar(algo)})
 
-	game.addVisual(autoAIzquierda1)
-	game.addVisual(autoAIzquierda2)
-	game.addVisual(autoAIzquierda3)
-	
+	autopista.arrancar()
+	salud.iniciar()
+
 	game.addVisual(alumno)
 	game.addVisual(unq)
-	game.addVisual(primeraVida)
+	/*game.addVisual(primeraVida)
 	game.addVisual(segundaVida)
 	game.addVisual(terceraVida)
-	
+	*/
 	keyboard.left().onPressDo({alumno.mover(izquierda)})
 	keyboard.right().onPressDo({alumno.mover(derecha)})
 	keyboard.up().onPressDo({alumno.mover(arriba)})

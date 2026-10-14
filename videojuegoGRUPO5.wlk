@@ -4,14 +4,11 @@ import wollok.game.*
 //  ALUMNO: PERSONAJE PRINCIPAL
 // =====================================================================
 object alumno {
-    var vidaRestante = terceraVida
+    const vidasRestantes = salud
     var property position = game.at(4,0)
-    var aspecto = alumnoSano
 	
 	method descontarVida(){
-		vidaRestante.marcarComoPerdida()
-		vidaRestante = vidaRestante.vidaInferior()
-		aspecto = aspecto.siguienteEtapa()
+		vidasRestantes.perderUnaVida()
 	}
    
 	method serAtropellado() {
@@ -36,76 +33,100 @@ object alumno {
 	method volverAlInicio() { position = game.at(4,0) }
 
 	method estaMuerto() {
-		return vidaRestante.cantidadDeVidas() == 0
+		return !vidasRestantes.hayVidas()
 	}
 
 	method mover(direccion) {
 		position = direccion.siguiente(position)
 	  
 	}
-	method image() = "estudiante_" + aspecto.nombre() + ".png"
+	method image() = "estudiante_" + vidasRestantes.cuantasVidasHay() + "vida.png"
+	
+	//interacciones con colisiones:
+	method interactuar(algo){
+		algo.interaccion(self)
+	}
 }
 
 // =====================================================================
 //  VIDAS DEL PERSONAJE PRINCIPAL
 // =====================================================================
-object primeraVida{
-	var property position = game.at(7,0)
-	var aspecto = self
-
-	method cantidadDeVidas() = 1
-
-	method image() = aspecto.nombre() + "_vida.png"
-	method nombre() = "primera"
-
-	method marcarComoPerdida(){
-		aspecto = self.vidaInferior()
-	}
-	method vidaInferior() = sinVida	
-}
-object segundaVida{
-	var property position = game.at(8,0)
-	var aspecto = self
-
-	method cantidadDeVidas() = 2
-
-	method image() = aspecto.nombre() + "_vida.png"
-	method nombre() = "segunda"
+class Vida{
+	var property position
+	const nombre
+	const cantidadDeVidas
+	var aspecto = conVida
 	
-	method marcarComoPerdida(){
-		aspecto = sinVida
-	}
-		
-	method vidaInferior() = primeraVida
-}
-object terceraVida{
-	var property position = game.at(9,0)
-	var aspecto = self
+	method cantidadDeVidas() = cantidadDeVidas
 	
-	method cantidadDeVidas() = 3
-	
-	method image() = aspecto.nombre()+"_vida.png"
-	method nombre() = "tercera"
+	method image() = aspecto.nombreDeVida(nombre) + "_vida.png"
 	
 	method marcarComoPerdida(){
 		aspecto = sinVida
 	}
 	
-	method vidaInferior() = segundaVida
+	method marcarComoRecuperada(){
+		aspecto = conVida
+	}
+	
+	method estaPerdida() = aspecto.estaPerdida()
 }
+object salud {
+	//Es en orden descendente, es decir, de la vida mas alta (3) hasta la mas baja (1)
+	const vidas = [
+        new Vida(position = game.at(9,0), nombre = "tercera",   cantidadDeVidas = 3),
+        new Vida(position = game.at(8,0), nombre = "segunda",   cantidadDeVidas = 2),
+		new Vida(position = game.at(7,0), nombre = "primera",   cantidadDeVidas = 1)
+    ]
+
+    method iniciar() {
+        vidas.forEach({ vida => game.addVisual(vida) })
+    }
+
+	method cuantasVidasHay() = 
+		if (self.hayVidas()) {self.encontrarVidaNoPerdida().cantidadDeVidas()}
+		else { 0 }
+	method hayVidas() = vidas.any({vida => !vida.estaPerdida()})
+	method encontrarVidaNoPerdida() = vidas.find({vida => !vida.estaPerdida()})
+	
+	method perderUnaVida(){
+		if(self.hayVidas()){
+			self.encontrarVidaNoPerdida().marcarComoPerdida()
+		}
+	}
+	
+	method ganarUnaVida(){
+		self.validarGanarVida()
+		self.encontrarVidaPerdida().marcarComoRecuperada()
+	}
+	method validarGanarVida(){
+		if(!self.hayAlgunaVidaPerdida()){
+			self.error("Tengo las vidas llenas")
+		}
+	}
+	method hayAlgunaVidaPerdida() = vidas.any({vida => vida.estaPerdida()})
+	method encontrarVidaPerdida() = vidas.filter({vida => vida.estaPerdida()}).last()
+}
+
+//Objetos de tipo estadoDeVida que son usados por salud
 object sinVida{
-	method nombre() = "sin"
+	method nombreDeVida(nombre) = "sin"
 	
-	method vidaInferior() = self
+	method estaPerdida() = true
+}
+
+object conVida{
+	method nombreDeVida(nombre) = nombre
 	
-	method cantidadDeVidas() = 0
+	method estaPerdida() = false
 }
 
 
 // =====================================================================
 //  ESTADOS/ASPECTOS DEL PERSONAJE PRINCIPAL
 // =====================================================================
-object alumnoSano{
+//salud se encargan por el momento de representar el estado del alumno
+/*object alumnoSano{
 	method nombre() = "3vidas"
 	
 	method siguienteEtapa() = alumnoLastimado
@@ -125,7 +146,7 @@ object alumnoFallecido{
 	method nombre() = "0vida"
 	
 	method siguienteEtapa() = self
-}
+}*/
 
 // =====================================================================
 //  DIRECCIONES del PERSONAJE PRINCIPAL
@@ -143,6 +164,8 @@ object izquierda {
     }
 	
 	method puedeAvanzar(posicion) = posicion.x() > 0
+	
+	method primeraCelda() = game.width() - 1
 }
 object derecha {
     method siguiente(posicion) {
@@ -156,6 +179,8 @@ object derecha {
     }
 	
 	method puedeAvanzar(posicion) = posicion.x() < game.width() - 1
+	
+	method primeraCelda() = 0
 }
 object arriba {
     method siguiente(posicion) {
@@ -203,7 +228,53 @@ class Vehiculo {
             position = posicionInicial
         }
     }
-}	
+	
+	method interaccion(algo){
+		algo.serAtropellado()
+	}
+}
+
+class Carril {
+    const fila
+    const direccion
+    const intervaloEnMs
+
+    method arrancar() {
+        const vehiculo = new Vehiculo(
+            posicionInicial = game.at(direccion.primeraCelda(), fila),
+            direccion = direccion,
+            intervaloEnMs = intervaloEnMs
+        )
+        game.addVisual(vehiculo)
+        vehiculo.empezarARecorrer()
+    }
+}
+
+object autopista {
+    const carriles = [
+        new Carril(fila = 2, direccion = derecha,   intervaloEnMs = 800),
+        new Carril(fila = 3, direccion = derecha,   intervaloEnMs = 400),
+        new Carril(fila = 4, direccion = derecha,   intervaloEnMs = 900),
+        new Carril(fila = 5, direccion = izquierda, intervaloEnMs = 300),
+        new Carril(fila = 6, direccion = izquierda, intervaloEnMs = 600),
+        new Carril(fila = 7, direccion = izquierda, intervaloEnMs = 500)
+    ]
+
+    method arrancar() {
+        carriles.forEach({ carril => carril.arrancar() })
+    }
+}
+
+// =====================================================================
+// COMIDAS: Dara mecanicas al juego, ademas para cargar vidas
+// =====================================================================
+class Comida{
+	const vidasQueRecupera 
+	
+	method interaccion(algo){
+		algo.serAtropellado()
+	}
+}
 
 
 // =====================================================================
@@ -214,3 +285,11 @@ object unq {
 
 	method image () = "AccesoUNQ.jpg" 
 }
+
+//tick(intervalo, acción, ejecutarInmediatamente)
+//Devuelve un objeto tick que se utilizará para la ejecución de una acción durante un intervalo de tiempo.
+//El intervalo está en milisegundos y la acción es un bloque sin parámetros.
+
+//onTick(milisegundos, nombre, acción)
+//Agrega un bloque con un nombre específico que se ejecutará cada n milisegundos.
+//El bloque no espera ningún argumento.Ten cuidado de no configurarlo con demasiada frecuencia :)
